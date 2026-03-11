@@ -1,0 +1,73 @@
+# ============================================================
+# AI 블로그 자동화 — 전역 설정
+# ============================================================
+
+project:
+  name: "AI Blog Automation"
+  version: "0.1.0"
+
+# ── 발행 설정 ──
+publishing:
+  target_frequency: 7            # 주간 발행 목표 (회)
+  quality_threshold: 7.5         # 이 점수 미만이면 발행 스킵
+  similarity_threshold: 0.55     # 네이버/티스토리 간 최대 유사도
+  platforms: ["naver", "tistory"]
+  simultaneous_publish: true     # 양 플랫폼 동시 발행
+  publish_time_optimization: true # 성과 데이터 기반 발행 시간 자동 최적화
+  default_publish_times:         # 초기 기본값 (최적화 전)
+    naver: "08:30"
+    tistory: "09:00"
+
+# ── 에이전트 설정 ──
+agents:
+  execution_mode: "partial_parallel"  # 네이버+티스토리 동시 작성/편집/SEO
+  max_retries: 3
+  retry_delays: [5, 15, 60]          # 초 단위, 지수 백오프
+  default_model: "claude-sonnet-4-20250514"
+  default_max_tokens: 4096
+  default_temperature: 0.7
+
+# ── 수집 설정 ──
+collection:
+  schedule: "0 */6 * * *"       # 매 6시간
+  trend_schedule: "0 6 * * *"   # 트렌드는 매일 06:00 1회
+
+# ── 품질 평가 ──
+quality:
+  score_weights:
+    accuracy: 0.2      # 정확성
+    readability: 0.2    # 가독성
+    engagement: 0.2     # 흥미도
+    structure: 0.2      # 구조
+    tone: 0.2           # 톤 일관성
+
+# ── A/B 테스트 (나중에 활성화) ──
+ab_testing:
+  enabled: false
+  metric_weights:
+    views: 0.6
+    read_time: 0.4
+  min_sample_size: 10
+
+# ── 비용 관리 ──
+cost:
+  tracking_enabled: true
+  # 아래는 테스트 후 결정
+  # monthly_budget: 100.0
+  # daily_warning: 5.0
+  # monthly_warning_percent: 80
+
+# ── 로깅 ──
+logging:
+  level: "INFO"
+  format: "structured"       # structlog
+  file: "logs/app.log"
+  max_size_mb: 50
+  backup_count: 5
+
+# ── 모니터링 (초기: 텔레그램 리포트) ──
+monitoring:
+  telegram_reports: true
+  weekly_report_day: "monday"
+  weekly_report_time: "09:00"
+  dashboard: false             # 나중에 Streamlit 추가

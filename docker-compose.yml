@@ -1,0 +1,85 @@
+# ============================================================
+# AI Blog Automation — Docker Compose
+# 서비스: Python 앱 + n8n + Redis + (향후 PostgreSQL)
+#
+# 사용법:
+#   개발: docker compose up -d
+#   중지: docker compose down
+#   로그: docker compose logs -f app
+#   재빌드: docker compose up -d --build
+# ============================================================
+
+services:
+  # ── Python 앱 (블로그 자동화 메인) ──
+  app:
+    build: .
+    container_name: blog-automation-app
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data           # DB 파일 영속성
+      - ./logs:/app/logs           # 로그 영속성
+      - ./config:/app/config       # 설정 파일 (핫리로드 가능)
+    depends_on:
+      - redis
+    networks:
+      - blog-net
+
+  # ── n8n (워크플로우 오케스트레이션) ──
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: blog-automation-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"                # n8n 웹 UI
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-changeme}
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - GENERIC_TIMEZONE=Asia/Seoul
+      - TZ=Asia/Seoul
+    volumes:
+      - n8n_data:/home/node/.n8n   # n8n 데이터 영속성
+    networks:
+      - blog-net
+
+  # ── Redis (캐시 + 작업 큐) ──
+  redis:
+    image: redis:7-alpine
+    container_name: blog-automation-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - blog-net
+
+  # ── PostgreSQL (Phase 3 이후 활성화) ──
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: blog-automation-db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: blog_automation
+  #     POSTGRES_USER: ${DB_USER:-blog}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - blog-net
+
+volumes:
+  n8n_data:
+  redis_data:
+  # postgres_data:
+
+networks:
+  blog-net:
+    driver: bridge
