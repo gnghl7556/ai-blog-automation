@@ -5,7 +5,6 @@ Pipeline 통합 테스트 — DB 저장 + 승인 + 발행 흐름 (mock)
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from database.session import DatabaseManager
 from database.repository import ContentRepository
 from database.models import TopicStatus
 from pipeline import Pipeline, PipelineResult
@@ -20,14 +19,6 @@ from agents.data_models import (
     SEOResult,
     PublishResult,
 )
-
-
-@pytest.fixture
-def db():
-    """인메모리 DatabaseManager"""
-    manager = DatabaseManager(database_url="sqlite:///:memory:")
-    manager.create_tables()
-    return manager
 
 
 @pytest.fixture

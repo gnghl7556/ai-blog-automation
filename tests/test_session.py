@@ -4,16 +4,7 @@ DatabaseManager 테스트 — SQLite :memory: 사용
 
 import pytest
 
-from database.session import DatabaseManager
 from database.models import Base, Topic, TopicStatus
-
-
-@pytest.fixture
-def db():
-    """인메모리 DatabaseManager"""
-    manager = DatabaseManager(database_url="sqlite:///:memory:")
-    manager.create_tables()
-    return manager
 
 
 class TestDatabaseManager:

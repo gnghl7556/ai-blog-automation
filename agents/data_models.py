@@ -143,6 +143,32 @@ class ContentPackage(BaseModel):
     tistory_preview_path: Optional[str] = None
 
 
+# ── 수집 + 큐레이션 (Phase 4) ──
+
+class RawTopicData(BaseModel):
+    """수집기 출력 — 원시 주제 데이터"""
+    title: str
+    url: str
+    source: str
+    source_type: str = "media"
+    summary: str = ""
+    language: str = "en"
+    published_at: Optional[datetime] = None
+    title_ko: Optional[str] = None
+    summary_ko: Optional[str] = None
+
+
+class CurationResult(BaseModel):
+    """큐레이션 에이전트 출력"""
+    raw_topic_id: str
+    score: float
+    criteria_scores: dict[str, float] = {}
+    reason: str = ""
+    recommended_type: str = "news_briefing"
+    recommended_category: str = "ai_products"
+    selected: bool = False
+
+
 # ── 발행 결과 ──
 
 class PublishResult(BaseModel):

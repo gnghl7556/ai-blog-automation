@@ -105,9 +105,25 @@ class BotRunner:
         return results
 
     async def _process_update(self, update: dict) -> None:
-        """단일 업데이트 처리"""
+        """단일 업데이트 처리 (발신자 검증 포함)"""
         callback_query = update.get("callback_query")
         if not callback_query:
+            return
+
+        # 발신자 chat_id 검증
+        sender_chat_id = str(
+            callback_query.get("message", {})
+            .get("chat", {})
+            .get("id", "")
+        )
+        allowed_chat_id = self.notifier.chat_id
+
+        if sender_chat_id != allowed_chat_id:
+            self.logger.warning(
+                "bot_runner.unauthorized_callback",
+                sender_chat_id=sender_chat_id,
+                allowed_chat_id=allowed_chat_id,
+            )
             return
 
         callback_data = callback_query.get("data", "")
@@ -185,6 +201,10 @@ class BotRunner:
 
         try:
             api_key = os.getenv("ANTHROPIC_API_KEY", "")
+            if not api_key.strip():
+                raise ValueError(
+                    "ANTHROPIC_API_KEY 환경변수가 설정되지 않았습니다."
+                )
             client = ClaudeClient(api_key=api_key)
             pipe = Pipeline(client, db_manager=self.db, notifier=self.notifier)
             result = await pipe.publish(topic_id)
@@ -214,5 +234,6 @@ class BotRunner:
                 error=str(e),
             )
             await self.notifier.send_message(
-                f"<b>발행 실패</b>\n주제: {topic_id}\n에러: {str(e)}"
+                f"<b>발행 실패</b>\n주제: {topic_id}\n"
+                "관리자 로그를 확인하세요."
             )

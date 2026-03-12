@@ -5,21 +5,12 @@ BotRunner 테스트 — 콜백 처리 + 승인/반려/수정 흐름
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from database.session import DatabaseManager
 from database.repository import ContentRepository
 from database.models import TopicStatus
 from approval.bot_runner import BotRunner
 from agents.data_models import (
     TopicPackage, EditResult, SEOResult, PublishResult,
 )
-
-
-@pytest.fixture
-def db():
-    """인메모리 DatabaseManager"""
-    manager = DatabaseManager(database_url="sqlite:///:memory:")
-    manager.create_tables()
-    return manager
 
 
 @pytest.fixture
@@ -90,6 +81,7 @@ class TestProcessUpdate:
             "callback_query": {
                 "id": "123",
                 "data": "approve:cb_approve",
+                "message": {"chat": {"id": "test_chat"}},
             },
         }
 
@@ -113,6 +105,7 @@ class TestProcessUpdate:
             "callback_query": {
                 "id": "456",
                 "data": "reject:cb_reject",
+                "message": {"chat": {"id": "test_chat"}},
             },
         }
 
@@ -132,6 +125,7 @@ class TestProcessUpdate:
             "callback_query": {
                 "id": "789",
                 "data": "revise:cb_revise",
+                "message": {"chat": {"id": "test_chat"}},
             },
         }
 
@@ -168,7 +162,8 @@ class TestAutoPublish:
             published_url="https://tistory.com/1",
         )
 
-        with patch("pipeline.Pipeline") as MockPipeline:
+        with patch("pipeline.Pipeline") as MockPipeline, \
+             patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-key"}):
             mock_pipe = MockPipeline.return_value
             mock_pipe.publish = AsyncMock(return_value=mock_result)
 
@@ -184,7 +179,8 @@ class TestAutoPublish:
         repo = ContentRepository(db)
         _seed_topic(repo, "auto_fail")
 
-        with patch("pipeline.Pipeline") as MockPipeline:
+        with patch("pipeline.Pipeline") as MockPipeline, \
+             patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-key"}):
             mock_pipe = MockPipeline.return_value
             mock_pipe.publish = AsyncMock(
                 side_effect=ValueError("테스트 에러")
@@ -195,7 +191,9 @@ class TestAutoPublish:
             mock_notifier.send_message.assert_called()
             call_text = mock_notifier.send_message.call_args[0][0]
             assert "발행 실패" in call_text
-            assert "테스트 에러" in call_text
+            assert "로그를 확인" in call_text
+            # 보안: 내부 에러 메시지가 사용자에게 노출되지 않아야 함
+            assert "테스트 에러" not in call_text
 
 
 class TestGetUpdates:

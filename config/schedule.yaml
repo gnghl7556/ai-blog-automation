@@ -1,0 +1,32 @@
+scheduler:
+  timezone: "Asia/Seoul"
+  enabled: true
+
+jobs:
+  collect:
+    description: "RSS 주제 수집"
+    cron: "0 6 * * *"         # 매일 06:00 KST
+    enabled: true
+
+  curate:
+    description: "주제 큐레이션"
+    cron: "30 6 * * *"        # 매일 06:30 KST
+    enabled: true
+
+  generate:
+    description: "자동 글 생성"
+    cron: "0 7 * * *"         # 매일 07:00 KST
+    count: 2                  # 하루 생성 글 수
+    enabled: true
+
+  cleanup:
+    description: "오래된 raw_topics 정리 (30일 이상)"
+    cron: "0 0 * * 0"         # 매주 일요일 00:00
+    retention_days: 30
+    enabled: true
+
+notifications:
+  daily_summary:
+    description: "일일 요약 텔레그램 알림"
+    cron: "0 21 * * *"        # 매일 21:00 KST
+    enabled: true

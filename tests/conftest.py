@@ -6,6 +6,7 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 
 from utils.claude_client import ClaudeClient
+from database.session import DatabaseManager
 
 
 @pytest.fixture
@@ -19,3 +20,11 @@ def mock_claude_client() -> ClaudeClient:
     client.call = AsyncMock(return_value="mock response")
     client.cost_tracker = MagicMock()
     return client
+
+
+@pytest.fixture
+def db():
+    """인메모리 DatabaseManager (공통 fixture)"""
+    manager = DatabaseManager(database_url="sqlite:///:memory:")
+    manager.create_tables()
+    return manager

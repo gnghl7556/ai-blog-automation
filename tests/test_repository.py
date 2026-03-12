@@ -4,18 +4,9 @@ ContentRepository 테스트 — CRUD 검증
 
 import pytest
 
-from database.session import DatabaseManager
 from database.repository import ContentRepository
 from database.models import TopicStatus
 from agents.data_models import TopicPackage, EditResult, SEOResult
-
-
-@pytest.fixture
-def db():
-    """인메모리 DatabaseManager"""
-    manager = DatabaseManager(database_url="sqlite:///:memory:")
-    manager.create_tables()
-    return manager
 
 
 @pytest.fixture

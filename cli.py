@@ -85,7 +85,6 @@ def generate(
         db = get_db_manager()
         db.create_tables()
 
-        # 텔레그램 설정이 있으면 notifier 생성
         notifier = None
         if os.getenv("TELEGRAM_BOT_TOKEN") and os.getenv("TELEGRAM_CHAT_ID"):
             from utils.notification import TelegramNotifier
@@ -109,7 +108,6 @@ def _print_result(result, client: ClaudeClient) -> None:
     """파이프라인 결과를 Rich 테이블로 출력"""
     qr = result.quality_report
 
-    # 품질 리포트 테이블
     table = Table(title="품질 리포트")
     table.add_column("항목", style="cyan")
     table.add_column("값", justify="right")
@@ -137,7 +135,6 @@ def _print_result(result, client: ClaudeClient) -> None:
 
     console.print(table)
 
-    # 결과 요약
     status_color = "green" if result.status in ("success", "pending_approval") else "red"
     console.print(f"\n[{status_color}]결과: {result.status.upper()}[/{status_color}]")
 
@@ -167,7 +164,6 @@ def _print_result(result, client: ClaudeClient) -> None:
         for issue in qr.issues:
             console.print(f"  - {issue}")
 
-    # 비용
     console.print(f"\n[dim]API 비용: {client.get_cost_summary()}[/dim]")
 
 
@@ -198,23 +194,17 @@ def topics(
     table.add_column("생성일")
 
     status_colors = {
-        "collected": "dim",
-        "writing": "blue",
-        "review": "yellow",
-        "approved": "green",
-        "published": "bold green",
-        "rejected": "red",
+        "collected": "dim", "writing": "blue", "review": "yellow",
+        "approved": "green", "published": "bold green", "rejected": "red",
     }
 
     for t in topic_list:
         color = status_colors.get(t.status, "white")
         created = t.created_at.strftime("%Y-%m-%d %H:%M") if t.created_at else "-"
         table.add_row(
-            t.id,
-            t.title[:40],
+            t.id, t.title[:40],
             f"[{color}]{t.status}[/{color}]",
-            t.category or "-",
-            created,
+            t.category or "-", created,
         )
 
     console.print(table)
@@ -240,16 +230,13 @@ def approve(
         )
         raise typer.Exit(1)
 
-    # 콘텐츠별 승인 로그 저장
     contents = repo.get_contents_by_topic(topic_id)
     for c in contents:
         repo.save_approval_log(c.id, "approved", notes="CLI 승인")
 
     repo.update_topic_status(topic_id, TopicStatus.APPROVED)
     console.print(f"[green]승인 완료: {topic_id} ({topic.title})[/green]")
-    console.print(
-        f"[dim]발행하려면: python cli.py publish {topic_id}[/dim]"
-    )
+    console.print(f"[dim]발행하려면: python cli.py publish {topic_id}[/dim]")
 
 
 @app.command()
@@ -285,7 +272,6 @@ def publish(
         pipe = Pipeline(client, db_manager=db, notifier=notifier)
         result = await pipe.publish(topic_id)
 
-        # 결과 출력
         if result.naver_publish_result:
             nr = result.naver_publish_result
             if nr.success:
@@ -358,12 +344,23 @@ def bot():
 def status():
     """파이프라인 상태 확인"""
     console.print(Panel("파이프라인 상태", style="bold blue"))
-    console.print("[green]Phase 3B — 텔레그램 자동 발행 완료[/green]")
-    console.print("  python cli.py generate '주제'  — 글 생성 + DB 저장")
+    console.print("[green]Phase 5 — 스케줄러 + 전자동 파이프라인[/green]")
+    console.print("  python cli.py scheduler        — 자동 스케줄러 시작")
+    console.print("  python cli.py schedule-status  — 스케줄 상태 확인")
+    console.print("  python cli.py collect          — RSS 주제 수집")
+    console.print("  python cli.py curate           — 주제 큐레이션")
+    console.print("  python cli.py generate-auto    — 자동 글 생성")
+    console.print("  python cli.py generate '주제'  — 수동 글 생성")
     console.print("  python cli.py topics           — 주제 목록 조회")
     console.print("  python cli.py approve <id>     — CLI 승인")
     console.print("  python cli.py publish <id>     — 수동 발행")
-    console.print("  python cli.py bot              — 텔레그램 봇 (자동 발행)")
+    console.print("  python cli.py bot              — 텔레그램 봇")
+
+
+# 자동화 커맨드 등록
+from cli_auto import register_auto_commands  # noqa: E402
+
+register_auto_commands(app)
 
 
 if __name__ == "__main__":

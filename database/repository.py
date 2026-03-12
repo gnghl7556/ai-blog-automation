@@ -1,6 +1,7 @@
 """
 ContentRepository — DB CRUD 레이어
 Pydantic 모델 <-> SQLAlchemy 모델 매핑을 담당합니다.
+RawTopic 관련 메서드는 RawTopicRepository에서 상속됩니다.
 """
 
 import uuid
@@ -15,8 +16,8 @@ from database.models import (
     Content,
     ApprovalLog,
     TopicStatus,
-    ApprovalAction,
 )
+from database.raw_topic_repo import RawTopicRepository
 from agents.data_models import (
     TopicPackage,
     EditResult,
@@ -26,15 +27,18 @@ from agents.data_models import (
 logger = structlog.get_logger()
 
 
-class ContentRepository:
+class ContentRepository(RawTopicRepository):
     """콘텐츠 DB 저장·조회 레이어
+
+    RawTopicRepository를 상속하여 Topic/Content/ApprovalLog CRUD와
+    RawTopic CRUD를 모두 제공합니다.
 
     Args:
         db: DatabaseManager 인스턴스
     """
 
     def __init__(self, db: DatabaseManager):
-        self.db = db
+        super().__init__(db)
         self.logger = logger.bind(module="repository")
 
     # ── Topic ──
@@ -208,14 +212,7 @@ class ContentRepository:
     # ── 조회 ──
 
     def get_topic(self, topic_id: str) -> Optional[Topic]:
-        """주제 조회
-
-        Args:
-            topic_id: 주제 ID
-
-        Returns:
-            Topic 또는 None
-        """
+        """주제 조회"""
         with self.db.get_session() as session:
             topic = session.query(Topic).filter_by(id=topic_id).first()
             if topic:
@@ -223,14 +220,7 @@ class ContentRepository:
             return topic
 
     def get_topics_by_status(self, status: str) -> list[Topic]:
-        """상태별 주제 목록 조회
-
-        Args:
-            status: 주제 상태 값
-
-        Returns:
-            Topic 목록
-        """
+        """상태별 주제 목록 조회"""
         with self.db.get_session() as session:
             topics = (
                 session.query(Topic).filter_by(status=status).all()
@@ -240,14 +230,7 @@ class ContentRepository:
             return topics
 
     def get_contents_by_topic(self, topic_id: str) -> list[Content]:
-        """주제의 콘텐츠 목록 조회
-
-        Args:
-            topic_id: 주제 ID
-
-        Returns:
-            Content 목록
-        """
+        """주제의 콘텐츠 목록 조회"""
         with self.db.get_session() as session:
             contents = (
                 session.query(Content)
@@ -259,11 +242,7 @@ class ContentRepository:
             return contents
 
     def get_all_topics(self) -> list[Topic]:
-        """전체 주제 목록 조회 (최신순)
-
-        Returns:
-            Topic 목록
-        """
+        """전체 주제 목록 조회 (최신순)"""
         with self.db.get_session() as session:
             topics = (
                 session.query(Topic)

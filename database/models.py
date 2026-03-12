@@ -156,6 +156,30 @@ class ApprovalLog(Base):
     content = relationship("Content", back_populates="approval_logs")
 
 
+class RawTopic(Base):
+    """수집된 원시 주제 (Phase 4)"""
+    __tablename__ = "raw_topics"
+
+    id = Column(String, primary_key=True)
+    title = Column(String, nullable=False)
+    title_ko = Column(String)
+    url = Column(String, unique=True)
+    source = Column(String)
+    source_type = Column(String)
+    summary = Column(Text)
+    summary_ko = Column(Text)
+    language = Column(String, default="en")
+    published_at = Column(DateTime)
+    collected_at = Column(DateTime, default=datetime.utcnow)
+    curator_score = Column(Float)
+    curator_reason = Column(Text)
+    curator_detail = Column(JSON)
+    recommended_type = Column(String)
+    recommended_category = Column(String)
+    status = Column(String, default="collected")
+    used_topic_id = Column(String, ForeignKey("topics.id"))
+
+
 class CostLog(Base):
     """API 비용 로그"""
     __tablename__ = "cost_logs"
