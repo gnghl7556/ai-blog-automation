@@ -315,14 +315,55 @@ def cost():
 
 
 @app.command()
+def bot():
+    """텔레그램 봇을 시작합니다 (Long Polling, Ctrl+C로 종료)"""
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    if not token or not chat_id:
+        console.print(
+            "[red]TELEGRAM_BOT_TOKEN과 TELEGRAM_CHAT_ID가 "
+            ".env에 설정되어야 합니다.[/red]"
+        )
+        raise typer.Exit(1)
+
+    db = get_db_manager()
+    db.create_tables()
+
+    console.print(Panel(
+        "텔레그램 승인 봇 시작\n"
+        "승인 → 자동 발행 | 반려 → DB 상태 변경\n"
+        "Ctrl+C로 종료",
+        style="bold blue",
+    ))
+
+    async def _run_bot():
+        from approval.bot_runner import BotRunner
+        from utils.notification import TelegramNotifier
+
+        notifier = TelegramNotifier()
+        runner = BotRunner(db_manager=db, notifier=notifier)
+
+        try:
+            await runner.start()
+        except KeyboardInterrupt:
+            runner.stop()
+
+    try:
+        asyncio.run(_run_bot())
+    except KeyboardInterrupt:
+        console.print("\n[yellow]봇 종료됨[/yellow]")
+
+
+@app.command()
 def status():
     """파이프라인 상태 확인"""
     console.print(Panel("파이프라인 상태", style="bold blue"))
-    console.print("[green]Phase 3A — Pipeline 통합 + DB 구현 완료[/green]")
+    console.print("[green]Phase 3B — 텔레그램 자동 발행 완료[/green]")
     console.print("  python cli.py generate '주제'  — 글 생성 + DB 저장")
     console.print("  python cli.py topics           — 주제 목록 조회")
-    console.print("  python cli.py approve <id>     — 승인")
-    console.print("  python cli.py publish <id>     — 발행")
+    console.print("  python cli.py approve <id>     — CLI 승인")
+    console.print("  python cli.py publish <id>     — 수동 발행")
+    console.print("  python cli.py bot              — 텔레그램 봇 (자동 발행)")
 
 
 if __name__ == "__main__":
