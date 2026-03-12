@@ -54,14 +54,73 @@ class SchedulerRunner:
         notifier = TelegramNotifier()
         return BotRunner(db_manager=db, notifier=notifier)
 
+    async def _run_startup_healthcheck(self) -> bool:
+        """시작 시 헬스체크 실행
+
+        Returns:
+            True면 모든 항목 정상, False면 실패 항목 존재
+        """
+        from utils.health_checker import HealthChecker
+
+        checker = HealthChecker()
+        report = await checker.check_all()
+
+        for check in report.checks:
+            if check.healthy:
+                self.logger.info(
+                    "healthcheck.passed",
+                    name=check.name,
+                    message=check.message,
+                )
+            else:
+                self.logger.error(
+                    "healthcheck.failed",
+                    name=check.name,
+                    message=check.message,
+                )
+
+        if not report.all_healthy:
+            # 텔레그램 알림 (설정 있으면)
+            if self._has_telegram_config():
+                from utils.notification import TelegramNotifier
+                notifier = TelegramNotifier()
+                failed = [
+                    c for c in report.checks if not c.healthy
+                ]
+                failed_names = ", ".join(
+                    f"{c.name}: {c.message}" for c in failed
+                )
+                await notifier.send_message(
+                    f"🚨 <b>헬스체크 실패</b>\n{failed_names}"
+                )
+
+        return report.all_healthy
+
     async def start(self) -> None:
         """통합 러너 시작
 
-        1. 스케줄러 시작
-        2. 텔레그램 봇 시작 (설정 있으면)
-        3. asyncio.gather로 병렬 실행
+        1. 로그 설정
+        2. 시작 시 헬스체크
+        3. 스케줄러 시작
+        4. 텔레그램 봇 시작 (설정 있으면)
+        5. asyncio.gather로 병렬 실행
         """
+        # 로그 설정
+        from utils.log_config import setup_logging_from_config
+        setup_logging_from_config()
+
         self.logger.info("scheduler_runner.starting")
+
+        # 시작 시 헬스체크
+        healthy = await self._run_startup_healthcheck()
+        if not healthy:
+            self.logger.error(
+                "scheduler_runner.healthcheck_failed",
+                action="프로세스를 종료합니다",
+            )
+            raise SystemExit(
+                "헬스체크 실패 — 의존성을 확인하세요"
+            )
 
         # DB 테이블 확인
         from database.session import DatabaseManager

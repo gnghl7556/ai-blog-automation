@@ -1,0 +1,1026 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-03-12T23:39:18.963Z",
+  "activeFeatures": [
+    "ai-blog-automation",
+    "agents",
+    "tests",
+    "approval",
+    "publishers",
+    "database",
+    "collectors",
+    "scheduler",
+    "scripts",
+    "alembic"
+  ],
+  "primaryFeature": "ai-blog-automation",
+  "features": {
+    "ai-blog-automation": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": 97,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {
+        "analysis": "docs/03-analysis/ai-blog-automation.analysis.md",
+        "report": "docs/04-report/features/ai-blog-automation.report.md"
+      },
+      "timestamps": {
+        "started": "2026-03-11T23:49:57.759Z",
+        "lastUpdated": "2026-03-12T23:37:59.613Z",
+        "completedAt": "2026-03-12T05:00:00.000Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\utils\\log_config.py"
+    },
+    "agents": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-11T23:50:24.605Z",
+        "lastUpdated": "2026-03-12T06:08:42.436Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\agents\\curator_agent.py"
+    },
+    "tests": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-11T23:54:35.786Z",
+        "lastUpdated": "2026-03-12T23:39:18.963Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\tests\\test_scheduler.py"
+    },
+    "approval": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-12T01:41:13.817Z",
+        "lastUpdated": "2026-03-12T07:23:39.260Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\approval\\bot_runner.py"
+    },
+    "publishers": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-12T01:42:06.924Z",
+        "lastUpdated": "2026-03-12T04:25:55.067Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\publishers\\tistory_publisher.py"
+    },
+    "database": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-12T04:24:11.904Z",
+        "lastUpdated": "2026-03-12T07:33:52.936Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\database\\repository.py"
+    },
+    "collectors": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-12T06:07:25.455Z",
+        "lastUpdated": "2026-03-12T06:11:05.352Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\collectors\\rss_collector.py"
+    },
+    "phase-5": {
+      "phase": "check",
+      "phaseNumber": 4,
+      "matchRate": 95,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {
+        "plan": "docs/01-plan/features/phase-5.plan.md",
+        "design": "docs/02-design/features/phase-5.design.md",
+        "analysis": "docs/03-analysis/phase-5.analysis.md"
+      },
+      "timestamps": {
+        "started": "2026-03-12T09:00:00.000Z",
+        "lastUpdated": "2026-03-12T10:00:00.000Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\docs\\03-analysis\\phase-5.analysis.md"
+    },
+    "phase-6": {
+      "phase": "check",
+      "phaseNumber": 4,
+      "matchRate": 89,
+      "iterationCount": 1,
+      "requirements": [],
+      "documents": {
+        "plan": "docs/01-plan/features/roadmap-phase6-plus.plan.md",
+        "analysis": "docs/03-analysis/phase-6.analysis.md"
+      },
+      "timestamps": {
+        "started": "2026-03-13T00:00:00.000Z",
+        "lastUpdated": "2026-03-13T01:00:00.000Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\scheduler\\runner.py"
+    },
+    "scheduler": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-12T06:44:24.319Z",
+        "lastUpdated": "2026-03-12T23:38:09.961Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\scheduler\\jobs_generate.py"
+    },
+    "scripts": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-12T23:22:08.858Z",
+        "lastUpdated": "2026-03-12T23:22:08.858Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\scripts\\deploy.sh"
+    },
+    "alembic": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-12T23:25:05.117Z",
+        "lastUpdated": "2026-03-12T23:25:05.117Z"
+      },
+      "lastFile": "C:\\Users\\PC\\Documents\\ai-blog-automation\\alembic\\env.py"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-03-11T23:41:53.045Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-03-12T23:39:18.963Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-03-11T23:49:57.759Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:50:09.748Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:50:24.605Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:51:24.422Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:51:42.602Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:51:54.933Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:52:27.126Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:53:09.920Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:53:39.032Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:54:20.249Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:54:35.786Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:54:39.060Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:54:56.929Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:55:27.023Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:55:52.105Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T23:56:21.076Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T00:03:22.238Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T00:03:41.689Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T00:04:12.875Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T00:04:40.943Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T00:05:00.285Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T00:05:18.496Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T00:05:49.188Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:03:58.877Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:04:24.356Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:04:48.975Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:05:01.433Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:05:27.625Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:05:37.020Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:06:07.524Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:40:54.130Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:41:13.817Z",
+      "feature": "approval",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:41:26.662Z",
+      "feature": "approval",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:41:46.948Z",
+      "feature": "approval",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:42:06.924Z",
+      "feature": "publishers",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:42:32.122Z",
+      "feature": "publishers",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:42:51.563Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:45:29.398Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:45:38.753Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:45:49.772Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:46:06.997Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T01:58:52.067Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:24:11.904Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:25:17.048Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:25:45.468Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:25:50.554Z",
+      "feature": "publishers",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:25:55.067Z",
+      "feature": "publishers",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:27:31.631Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:32:05.440Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:33:08.137Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:33:39.105Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:34:15.543Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T04:35:52.930Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T05:29:38.797Z",
+      "feature": "approval",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T05:31:47.998Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T05:34:20.500Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T05:46:55.809Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T05:47:09.149Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:06:04.106Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:06:31.122Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:06:39.299Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:06:58.829Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:07:25.455Z",
+      "feature": "collectors",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:07:43.897Z",
+      "feature": "collectors",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:08:03.839Z",
+      "feature": "collectors",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:08:42.436Z",
+      "feature": "agents",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:09:24.933Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:10:40.817Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:11:05.352Z",
+      "feature": "collectors",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:44:24.319Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:44:38.116Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:45:20.443Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:45:41.557Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:45:58.280Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:46:19.188Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:46:42.822Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:47:39.877Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:48:04.516Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:48:10.731Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:48:34.777Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:48:39.703Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T06:48:43.295Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:23:03.644Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:23:17.883Z",
+      "feature": "approval",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:23:23.449Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:23:31.582Z",
+      "feature": "approval",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:23:39.260Z",
+      "feature": "approval",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:24:12.840Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:24:16.020Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:24:19.976Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:24:26.483Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:24:39.329Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:24:43.554Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:28:48.260Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:28:53.467Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:28:54.274Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:29:05.746Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:29:07.524Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:29:10.170Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:29:11.964Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:31:58.277Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:32:53.883Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:33:24.898Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:33:52.936Z",
+      "feature": "database",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:39:56.686Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:40:01.688Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:40:05.194Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:40:28.972Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:40:54.360Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:41:22.670Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:43:19.174Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:43:49.758Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:43:54.626Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:43:59.798Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T07:44:12.098Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:19:38.604Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:19:56.257Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:20:09.489Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:22:08.858Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:25:05.117Z",
+      "feature": "alembic",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:26:30.205Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:26:59.643Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:27:12.702Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:28:56.852Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:29:11.491Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:30:10.896Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:30:50.038Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:31:43.194Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:32:03.588Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:32:15.812Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:37:45.596Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:37:54.148Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:37:59.613Z",
+      "feature": "ai-blog-automation",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:38:09.961Z",
+      "feature": "scheduler",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:38:29.358Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:38:38.444Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:39:01.212Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-12T23:39:18.963Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    }
+  ]
+}

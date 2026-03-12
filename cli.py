@@ -355,6 +355,9 @@ def status():
     console.print("  python cli.py approve <id>     — CLI 승인")
     console.print("  python cli.py publish <id>     — 수동 발행")
     console.print("  python cli.py bot              — 텔레그램 봇")
+    console.print("  python cli.py health           — 헬스체크")
+    console.print("  python cli.py db-migrate       — DB 마이그레이션 생성")
+    console.print("  python cli.py db-upgrade       — DB 마이그레이션 적용")
 
 
 # 자동화 커맨드 등록

@@ -1,0 +1,26 @@
+[Unit]
+Description=AI Blog Automation Scheduler
+After=network.target
+
+[Service]
+Type=simple
+User=blog
+Group=blog
+WorkingDirectory=/opt/ai-blog-automation
+EnvironmentFile=/opt/ai-blog-automation/.env
+ExecStart=/opt/ai-blog-automation/.venv/bin/python cli.py scheduler
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ai-blog
+
+# 보안 강화
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/ai-blog-automation/data /opt/ai-blog-automation/logs
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

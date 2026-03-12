@@ -4,7 +4,7 @@ Phase 5 — BlogScheduler + SchedulerRunner 테스트
 
 import os
 import tempfile
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 import pytest
 import yaml
@@ -201,3 +201,54 @@ class TestSchedulerRunner:
         from scheduler.runner import SchedulerRunner
         runner = SchedulerRunner(config_path=path)
         assert runner._has_telegram_config() is False
+
+
+class TestSchedulerRunnerHealthcheck:
+    """SchedulerRunner 시작 시 헬스체크 테스트"""
+
+    @pytest.mark.asyncio
+    async def test_healthcheck_success(self, tmp_path):
+        """헬스체크 성공 시 True 반환"""
+        from utils.health_checker import HealthReport, CheckResult
+
+        path = _create_config(tmp_path, VALID_CONFIG)
+
+        from scheduler.runner import SchedulerRunner
+        runner = SchedulerRunner(config_path=path)
+
+        report = HealthReport(checks=[
+            CheckResult(name="db", healthy=True),
+            CheckResult(name="api", healthy=True),
+        ])
+
+        with patch(
+            "utils.health_checker.HealthChecker.check_all",
+            new_callable=AsyncMock,
+            return_value=report,
+        ):
+            result = await runner._run_startup_healthcheck()
+        assert result is True
+
+    @pytest.mark.asyncio
+    async def test_healthcheck_failure(self, tmp_path):
+        """헬스체크 실패 시 False 반환"""
+        from utils.health_checker import HealthReport, CheckResult
+
+        path = _create_config(tmp_path, VALID_CONFIG)
+
+        from scheduler.runner import SchedulerRunner
+        runner = SchedulerRunner(config_path=path)
+
+        report = HealthReport(checks=[
+            CheckResult(
+                name="db", healthy=False, message="연결 실패"
+            ),
+        ])
+
+        with patch(
+            "utils.health_checker.HealthChecker.check_all",
+            new_callable=AsyncMock,
+            return_value=report,
+        ):
+            result = await runner._run_startup_healthcheck()
+        assert result is False

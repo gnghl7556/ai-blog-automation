@@ -1,0 +1,52 @@
+# ============================================================
+# AI Blog Automation — Docker Compose (운영)
+# 서비스: 스케줄러 + 텔레그램 봇
+#
+# 사용법:
+#   시작: docker compose -f docker-compose.prod.yml up -d
+#   중지: docker compose -f docker-compose.prod.yml down
+#   로그: docker compose -f docker-compose.prod.yml logs -f
+#   재빌드: docker compose -f docker-compose.prod.yml up -d --build
+# ============================================================
+
+services:
+  # ── 스케줄러 (RSS 수집 → 글 생성 → 승인 요청) ──
+  scheduler:
+    build: .
+    container_name: blog-scheduler
+    restart: unless-stopped
+    env_file: .env
+    command: ["python", "cli.py", "scheduler"]
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "python", "cli.py", "health"]
+      interval: 5m
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    networks:
+      - blog-net
+
+  # ── 텔레그램 봇 (승인 → 자동 발행) ──
+  bot:
+    build: .
+    container_name: blog-bot
+    restart: unless-stopped
+    env_file: .env
+    command: ["python", "cli.py", "bot"]
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    depends_on:
+      scheduler:
+        condition: service_healthy
+    networks:
+      - blog-net
+
+networks:
+  blog-net:
+    driver: bridge

@@ -42,6 +42,48 @@ def register_auto_commands(app: typer.Typer) -> None:
     """자동화 관련 CLI 커맨드를 app에 등록"""
 
     @app.command()
+    def health():
+        """핵심 의존성 헬스체크 (DB, Claude API, Telegram)"""
+        from utils.health_checker import HealthChecker
+
+        checker = HealthChecker()
+
+        async def _check():
+            return await checker.check_all()
+
+        report = asyncio.run(_check())
+
+        table = Table(title="헬스체크 결과")
+        table.add_column("항목", style="cyan")
+        table.add_column("상태", justify="center")
+        table.add_column("메시지")
+        table.add_column("지연(ms)", justify="right")
+
+        for c in report.checks:
+            status_str = (
+                "[green]OK[/green]"
+                if c.healthy else "[red]FAIL[/red]"
+            )
+            latency = (
+                f"{c.latency_ms:.0f}" if c.latency_ms > 0 else "-"
+            )
+            table.add_row(c.name, status_str, c.message, latency)
+
+        console.print(table)
+
+        if report.all_healthy:
+            console.print(
+                f"\n[bold green]모든 항목 정상 "
+                f"({report.summary})[/bold green]"
+            )
+        else:
+            console.print(
+                f"\n[bold red]문제 발견 "
+                f"({report.summary})[/bold red]"
+            )
+            raise typer.Exit(1)
+
+    @app.command()
     def collect():
         """RSS 소스에서 주제를 수집하고 DB에 저장합니다."""
         console.print(Panel("RSS 주제 수집", style="bold blue"))
@@ -355,3 +397,44 @@ def register_auto_commands(app: typer.Typer) -> None:
             )
 
         console.print(table)
+
+    @app.command()
+    def db_migrate(
+        message: str = typer.Option(
+            "auto migration", help="마이그레이션 메시지"
+        ),
+    ):
+        """DB 마이그레이션 생성 (Alembic autogenerate)"""
+        import subprocess
+
+        result = subprocess.run(
+            ["python", "-m", "alembic", "revision",
+             "--autogenerate", "-m", message],
+            capture_output=True, text=True,
+        )
+        console.print(result.stdout)
+        if result.returncode != 0:
+            console.print(f"[red]{result.stderr}[/red]")
+            raise typer.Exit(1)
+        console.print("[green]마이그레이션 파일 생성 완료[/green]")
+
+    @app.command()
+    def db_upgrade(
+        revision: str = typer.Argument(
+            "head", help="대상 리비전 (기본: head)"
+        ),
+    ):
+        """DB 마이그레이션 적용"""
+        import subprocess
+
+        result = subprocess.run(
+            ["python", "-m", "alembic", "upgrade", revision],
+            capture_output=True, text=True,
+        )
+        console.print(result.stdout)
+        if result.returncode != 0:
+            console.print(f"[red]{result.stderr}[/red]")
+            raise typer.Exit(1)
+        console.print(
+            f"[green]마이그레이션 적용 완료 ({revision})[/green]"
+        )

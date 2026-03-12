@@ -143,7 +143,16 @@ async def job_cleanup(retention_days: int = 30) -> dict:
             _, repo = _get_db_and_repo()
             deleted = repo.cleanup_old_raw_topics(retention_days)
 
-            result = {"deleted": deleted}
+            # 오래된 로그 파일도 정리
+            from utils.log_config import cleanup_old_logs
+            logs_deleted = cleanup_old_logs(
+                retention_days=retention_days
+            )
+
+            result = {
+                "deleted": deleted,
+                "logs_deleted": logs_deleted,
+            }
             job_logger.info("job_cleanup.done", **result)
             return result
 
