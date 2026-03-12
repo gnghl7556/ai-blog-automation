@@ -5,25 +5,15 @@ Tistory Open API를 통해 글을 자동 발행합니다.
 
 import os
 from typing import Optional
-from dataclasses import dataclass
 
 import httpx
 import structlog
 
+from agents.data_models import PublishResult
+
 logger = structlog.get_logger()
 
 TISTORY_API_URL = "https://www.tistory.com/apis/post/write"
-
-
-@dataclass
-class PublishResult:
-    """발행 결과"""
-
-    success: bool
-    platform: str
-    published_url: Optional[str] = None
-    post_id: Optional[str] = None
-    error: Optional[str] = None
 
 
 class TistoryPublisher:

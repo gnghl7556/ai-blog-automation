@@ -141,3 +141,14 @@ class ContentPackage(BaseModel):
     # 미리보기 이미지 경로 (Playwright 스크린샷)
     naver_preview_path: Optional[str] = None
     tistory_preview_path: Optional[str] = None
+
+
+# ── 발행 결과 ──
+
+class PublishResult(BaseModel):
+    """플랫폼 발행 결과 (네이버/티스토리 공통)"""
+    success: bool
+    platform: str
+    published_url: Optional[str] = None
+    post_id: Optional[str] = None
+    error: Optional[str] = None

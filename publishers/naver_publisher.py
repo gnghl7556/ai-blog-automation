@@ -6,22 +6,12 @@ Playwright를 사용하여 네이버 블로그에 자동 발행합니다.
 
 import os
 from typing import Optional
-from dataclasses import dataclass
 
 import structlog
 
+from agents.data_models import PublishResult
+
 logger = structlog.get_logger()
-
-
-@dataclass
-class PublishResult:
-    """발행 결과"""
-
-    success: bool
-    platform: str
-    published_url: Optional[str] = None
-    post_id: Optional[str] = None
-    error: Optional[str] = None
 
 
 class NaverPublisher:
