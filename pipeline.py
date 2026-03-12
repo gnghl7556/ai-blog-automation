@@ -1,12 +1,12 @@
 """
 Pipeline 오케스트레이터 — 전체 글 생성 파이프라인 조율
 리서치 → 관점분화 → [네이버작성 | 티스토리작성] (병렬)
-→ [네이버편집 | 티스토리편집] (병렬) → 품질검사 → 결과 반환
+→ [편집] (병렬) → [SEO] (병렬) → 포맷 변환 → 품질검사 → 결과 반환
 """
 
 import asyncio
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 import structlog
@@ -15,6 +15,7 @@ from agents.research_agent import ResearchAgent
 from agents.content_splitter import ContentSplitter
 from agents.writing_agent import WritingAgent
 from agents.editor_agent import EditorAgent
+from agents.seo_agent import SEOAgent
 from agents.quality_checker import QualityChecker, QualityReport
 from agents.data_models import (
     TopicPackage,
@@ -22,8 +23,10 @@ from agents.data_models import (
     SplitOutlines,
     PlatformDraft,
     EditResult,
+    SEOResult,
 )
 from utils.claude_client import ClaudeClient
+from utils.text_utils import markdown_to_html, ensure_markdown
 
 logger = structlog.get_logger()
 
@@ -39,15 +42,19 @@ class PipelineResult:
     tistory_draft: PlatformDraft
     naver_edited: EditResult
     tistory_edited: EditResult
-    quality_report: QualityReport
-    status: str  # "success" | "quality_failed"
+    naver_seo: Optional[SEOResult] = None
+    tistory_seo: Optional[SEOResult] = None
+    naver_html: str = ""
+    tistory_markdown: str = ""
+    quality_report: Optional[QualityReport] = None
+    status: str = "pending"
 
 
 class Pipeline:
     """글 생성 파이프라인 오케스트레이터
 
     전체 파이프라인을 단계별로 실행하고
-    네이버/티스토리 작성·편집을 병렬로 처리합니다.
+    네이버/티스토리 작성·편집·SEO를 병렬로 처리합니다.
     """
 
     def __init__(self, claude_client: ClaudeClient):
@@ -56,6 +63,7 @@ class Pipeline:
         self.splitter = ContentSplitter(claude_client)
         self.writer = WritingAgent(claude_client)
         self.editor = EditorAgent(claude_client)
+        self.seo = SEOAgent(claude_client)
         self.checker = QualityChecker()
         self.logger = logger.bind(module="pipeline")
 
@@ -77,11 +85,12 @@ class Pipeline:
         Returns:
             PipelineResult: 파이프라인 결과
         """
+        kw = keywords or []
         topic_id = uuid.uuid4().hex[:12]
         topic_pkg = TopicPackage(
             topic_id=topic_id,
             title=topic,
-            keywords=keywords or [],
+            keywords=kw,
             category=category,
             content_type=content_type,
             source="manual_input",
@@ -101,12 +110,8 @@ class Pipeline:
         # 3단계: 작성 (네이버 + 티스토리 병렬)
         self.logger.info("pipeline.stage", stage="write")
         naver_draft, tistory_draft = await asyncio.gather(
-            self.writer.write(
-                outlines.naver, "naver", topic_pkg, research
-            ),
-            self.writer.write(
-                outlines.tistory, "tistory", topic_pkg, research
-            ),
+            self.writer.write(outlines.naver, "naver", topic_pkg, research),
+            self.writer.write(outlines.tistory, "tistory", topic_pkg, research),
         )
 
         # 4단계: 편집 (네이버 + 티스토리 병렬)
@@ -116,7 +121,19 @@ class Pipeline:
             self.editor.edit(tistory_draft),
         )
 
-        # 5단계: 품질 검사
+        # 5단계: SEO 최적화 (네이버 + 티스토리 병렬)
+        self.logger.info("pipeline.stage", stage="seo")
+        naver_seo, tistory_seo = await asyncio.gather(
+            self.seo.optimize(naver_edited, kw),
+            self.seo.optimize(tistory_edited, kw),
+        )
+
+        # 6단계: 포맷 변환
+        self.logger.info("pipeline.stage", stage="format")
+        naver_html = markdown_to_html(naver_seo.optimized_body)
+        tistory_md = ensure_markdown(tistory_seo.optimized_body)
+
+        # 7단계: 품질 검사
         self.logger.info("pipeline.stage", stage="quality_check")
         quality_report = self.checker.check(naver_edited, tistory_edited)
 
@@ -126,8 +143,10 @@ class Pipeline:
             "pipeline.complete",
             topic_id=topic_id,
             status=status,
-            naver_score=naver_edited.quality_score,
-            tistory_score=tistory_edited.quality_score,
+            naver_quality=naver_edited.quality_score,
+            tistory_quality=tistory_edited.quality_score,
+            naver_seo=naver_seo.seo_score,
+            tistory_seo=tistory_seo.seo_score,
             similarity=quality_report.similarity,
         )
 
@@ -139,6 +158,10 @@ class Pipeline:
             tistory_draft=tistory_draft,
             naver_edited=naver_edited,
             tistory_edited=tistory_edited,
+            naver_seo=naver_seo,
+            tistory_seo=tistory_seo,
+            naver_html=naver_html,
+            tistory_markdown=tistory_md,
             quality_report=quality_report,
             status=status,
         )

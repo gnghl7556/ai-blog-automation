@@ -1,0 +1,71 @@
+# ============================================================
+# AI 블로그 자동화 — 글 유형 정의
+# 각 유형별로 구조, 길이, 톤 가이드를 제공
+# ============================================================
+
+content_types:
+
+  news_briefing:
+    name: "뉴스 브리핑"
+    description: "AI 관련 최신 소식을 빠르게 전달"
+    frequency: "주 2~3회"
+    naver:
+      target_length: [1500, 2500]
+      structure: "상황 도입 → 핵심 내용 → 왜 중요한지 → 요약"
+      tone: "속보를 전하는 친구처럼"
+    tistory:
+      target_length: [2000, 3500]
+      structure: "배경 → 주요 변경사항 → 업계 영향 → 실무 시사점 → 요약"
+      tone: "업계 분석가처럼"
+
+  tool_review:
+    name: "도구 리뷰"
+    description: "AI 도구/서비스를 직접 사용해보고 리뷰"
+    frequency: "주 1~2회"
+    naver:
+      target_length: [2000, 3000]
+      structure: "경험 도입 → 이 도구가 뭔지 → 직접 써본 결과 → 추천 대상 → 요약"
+      tone: "먼저 써보고 알려주는 친구"
+    tistory:
+      target_length: [3000, 4500]
+      structure: "도구 개요 → 주요 기능 → 성능 분석 → 가격/플랜 비교 → 실무 적용 → 요약"
+      tone: "꼼꼼한 전문 리뷰어"
+
+  comparison:
+    name: "비교 분석"
+    description: "2~3개 AI 도구/서비스를 비교"
+    frequency: "주 1회"
+    naver:
+      target_length: [2000, 3000]
+      structure: "상황 도입 → 각각 뭔지 → 뭐가 다른지 → 누가 쓰면 좋은지 → 요약"
+      tone: "선택을 도와주는 조언자"
+    tistory:
+      target_length: [3000, 5000]
+      structure: "비교 배경 → 항목별 비교표 → 성능 벤치마크 → 사용 시나리오별 추천 → 요약"
+      tone: "공정한 분석가"
+
+  tech_explainer:
+    name: "기술 설명"
+    description: "AI 기술 원리를 이해하기 쉽게/깊게 설명"
+    frequency: "주 1회"
+    naver:
+      target_length: [2000, 3500]
+      structure: "일상 비유 도입 → 핵심 원리 → 왜 알아야 하는지 → 실생활 영향 → 요약"
+      tone: "설민석 강연 스타일"
+    tistory:
+      target_length: [3000, 5000]
+      structure: "개념 정의 → 동작 원리 → 기존 기술 대비 차이 → 실무 적용 사례 → 요약"
+      tone: "기술 해설자"
+
+  trend_analysis:
+    name: "트렌드 분석"
+    description: "AI 업계 동향, 미래 전망 분석"
+    frequency: "주 0~1회"
+    naver:
+      target_length: [2000, 3000]
+      structure: "최근 변화 → 왜 이런 흐름인지 → 우리한테 어떤 영향 → 앞으로 어떻게 될지 → 요약"
+      tone: "트렌드를 알려주는 선배"
+    tistory:
+      target_length: [3000, 5000]
+      structure: "시장 데이터 → 주요 트렌드 → 기업 전략 분석 → 실무 대응 방안 → 전망"
+      tone: "업계 애널리스트"

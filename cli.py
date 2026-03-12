@@ -113,14 +113,25 @@ def _print_result(result, client: ClaudeClient) -> None:
         "[green]PASS[/green]" if qr.similarity_passed else "[red]FAIL[/red]",
     )
 
+    if result.naver_seo and result.tistory_seo:
+        table.add_row("네이버 SEO", f"{result.naver_seo.seo_score:.1f}", "")
+        table.add_row("티스토리 SEO", f"{result.tistory_seo.seo_score:.1f}", "")
+
     console.print(table)
 
     # 결과 요약
     status_color = "green" if result.status == "success" else "red"
     console.print(f"\n[{status_color}]결과: {result.status.upper()}[/{status_color}]")
 
-    console.print(f"\n[bold]네이버:[/bold] {result.naver_edited.final_draft[:100]}...")
-    console.print(f"[bold]티스토리:[/bold] {result.tistory_edited.final_draft[:100]}...")
+    if result.naver_seo:
+        console.print(f"\n[bold]네이버 제목:[/bold] {result.naver_seo.title_final}")
+        console.print(f"[bold]네이버 태그:[/bold] {', '.join(result.naver_seo.tags[:5])}")
+    if result.tistory_seo:
+        console.print(f"[bold]티스토리 제목:[/bold] {result.tistory_seo.title_final}")
+        console.print(f"[bold]티스토리 메타:[/bold] {result.tistory_seo.meta_description or '-'}")
+
+    console.print(f"\n[dim]네이버 HTML: {len(result.naver_html)}자[/dim]")
+    console.print(f"[dim]티스토리 MD:  {len(result.tistory_markdown)}자[/dim]")
 
     if qr.issues:
         console.print("\n[yellow]이슈:[/yellow]")

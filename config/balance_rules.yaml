@@ -1,0 +1,41 @@
+# ============================================================
+# AI 블로그 자동화 — 카테고리 균형 규칙
+# 주 7회 발행 시 카테고리/유형 배분 기준
+# ============================================================
+
+balance:
+  # 주간 발행 목표
+  weekly_target: 7
+
+  # ── 카테고리별 비율 ──
+  category_ratio:
+    ai_products: 0.40      # 주 2~3건 (가장 대중적, 조회수 높음)
+    ai_technology: 0.30    # 주 2건 (차별화 콘텐츠)
+    ai_practical: 0.30     # 주 2건 (실용적, 검색 유입)
+
+  # ── 글 유형별 비율 ──
+  content_type_ratio:
+    news_briefing: 0.30    # 주 2건
+    tool_review: 0.25      # 주 1~2건
+    comparison: 0.15       # 주 1건
+    tech_explainer: 0.15   # 주 1건
+    trend_analysis: 0.15   # 주 1건
+
+  # ── 균형 규칙 ──
+  rules:
+    - name: "카테고리 연속 방지"
+      description: "같은 카테고리 글을 3일 연속 발행하지 않음"
+      max_consecutive: 2
+
+    - name: "유형 다양성"
+      description: "같은 글 유형을 2일 연속 발행하지 않음"
+      max_consecutive: 1
+
+    - name: "주말 콘텐츠"
+      description: "토/일에는 가벼운 콘텐츠 (리뷰, 활용팁) 우선"
+      weekend_preferred: ["tool_review", "ai_practical"]
+
+    - name: "트렌드 시의성"
+      description: "트렌드 관련 뉴스는 24시간 내 발행"
+      time_sensitive_types: ["news_briefing"]
+      max_delay_hours: 24

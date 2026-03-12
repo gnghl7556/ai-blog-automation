@@ -128,3 +128,126 @@ def truncate_text(text: str, max_length: int, suffix: str = "...") -> str:
     if len(text) <= max_length:
         return text
     return text[: max_length - len(suffix)] + suffix
+
+
+# ── 포맷 변환 ──
+
+
+def markdown_to_html(text: str) -> str:
+    """Markdown을 네이버 블로그용 HTML로 변환
+
+    지원: 헤딩(##), 볼드(**), 이탤릭(*), 리스트(-), 구분선(---),
+    이미지 플레이스홀더([이미지:]), 문단 분리
+
+    Args:
+        text: Markdown 텍스트
+
+    Returns:
+        HTML 변환된 텍스트
+    """
+    lines = text.split("\n")
+    html_lines: list[str] = []
+    in_list = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        # 빈 줄
+        if not stripped:
+            if in_list:
+                html_lines.append("</ul>")
+                in_list = False
+            html_lines.append("")
+            continue
+
+        # 구분선
+        if stripped == "---":
+            if in_list:
+                html_lines.append("</ul>")
+                in_list = False
+            html_lines.append("<hr>")
+            continue
+
+        # 헤딩
+        if stripped.startswith("###"):
+            if in_list:
+                html_lines.append("</ul>")
+                in_list = False
+            content = stripped.lstrip("#").strip()
+            html_lines.append(f"<h3>{content}</h3>")
+            continue
+        if stripped.startswith("##"):
+            if in_list:
+                html_lines.append("</ul>")
+                in_list = False
+            content = stripped.lstrip("#").strip()
+            html_lines.append(f"<h2>{content}</h2>")
+            continue
+
+        # 리스트
+        if stripped.startswith("- "):
+            if not in_list:
+                html_lines.append("<ul>")
+                in_list = True
+            content = stripped[2:]
+            content = _inline_markdown(content)
+            html_lines.append(f"  <li>{content}</li>")
+            continue
+
+        # 리스트 종료 후 일반 문단
+        if in_list:
+            html_lines.append("</ul>")
+            in_list = False
+
+        # 이미지 플레이스홀더 유지
+        if "[이미지:" in stripped:
+            html_lines.append(f"<p>{stripped}</p>")
+            continue
+
+        # 일반 문단
+        content = _inline_markdown(stripped)
+        html_lines.append(f"<p>{content}</p>")
+
+    if in_list:
+        html_lines.append("</ul>")
+
+    return "\n".join(html_lines)
+
+
+def _inline_markdown(text: str) -> str:
+    """인라인 Markdown 변환 (볼드, 이탤릭)"""
+    # 볼드 (**text**)
+    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+    # 이탤릭 (*text*)
+    text = re.sub(r"\*(.+?)\*", r"<em>\1</em>", text)
+    return text
+
+
+def ensure_markdown(text: str) -> str:
+    """티스토리용 Markdown 정리
+
+    이미 Markdown 형식인 글의 구조를 정리합니다.
+    - 헤딩 레벨 통일 (H2부터 시작)
+    - 빈 줄 정리
+    - 이미지 플레이스홀더 유지
+
+    Args:
+        text: Markdown 텍스트
+
+    Returns:
+        정리된 Markdown 텍스트
+    """
+    lines = text.split("\n")
+    result: list[str] = []
+
+    for line in lines:
+        stripped = line.strip()
+
+        # H1(#)을 H2(##)로 변환 (블로그에서 H1은 제목에 사용)
+        if stripped.startswith("# ") and not stripped.startswith("##"):
+            result.append(f"#{stripped}")
+            continue
+
+        result.append(line)
+
+    return "\n".join(result)

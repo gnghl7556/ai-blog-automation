@@ -5,7 +5,7 @@ Pipeline 오케스트레이터 테스트
 import json
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 from pipeline import Pipeline, PipelineResult
 from utils.claude_client import ClaudeClient
@@ -60,6 +60,47 @@ def _mock_quality_response():
     })
 
 
+def _mock_seo_response(platform: str):
+    data = {
+        "optimized_title": f"{platform} SEO 최적화 제목",
+        "optimized_body": f"## 소제목\n\n{platform} SEO 최적화된 본문입니다.",
+        "tags": ["AI", "테스트"],
+        "seo_score": 8.5,
+        "optimization_notes": "최적화 완료",
+    }
+    if platform == "tistory":
+        data["meta_description"] = "메타 설명"
+        data["schema_markup"] = {"@type": "BlogPosting", "headline": "제목"}
+    return json.dumps(data)
+
+
+def _build_side_effects():
+    """전체 파이프라인 호출 순서대로 mock 응답 생성
+    research(1) + split(1) + write(2) + edit(5*2) + seo(2) = 16
+    """
+    return [
+        _mock_research_response(),
+        _mock_split_response(),
+        _mock_write_response("naver"),
+        _mock_write_response("tistory"),
+        # edit naver (5)
+        _mock_edit_response(),
+        _mock_edit_response(),
+        _mock_edit_response(),
+        _mock_edit_response(),
+        _mock_quality_response(),
+        # edit tistory (5)
+        _mock_edit_response(),
+        _mock_edit_response(),
+        _mock_edit_response(),
+        _mock_edit_response(),
+        _mock_quality_response(),
+        # seo (2)
+        _mock_seo_response("naver"),
+        _mock_seo_response("tistory"),
+    ]
+
+
 @pytest.fixture
 def mock_claude_client():
     client = MagicMock(spec=ClaudeClient)
@@ -72,75 +113,57 @@ class TestPipeline:
     @pytest.mark.asyncio
     async def test_pipeline_runs_end_to_end(self, mock_claude_client):
         """파이프라인이 끝까지 실행되는지 확인"""
-        # Claude 호출 순서:
-        # 1. research (1회)
-        # 2. split (1회)
-        # 3. naver write + tistory write (2회, 병렬)
-        # 4. naver edit (factcheck, readability, tone, grammar, quality = 5회)
-        #    + tistory edit (5회) → 총 10회, 병렬
-        # 총 14회 호출
-        mock_claude_client.call.side_effect = [
-            _mock_research_response(),         # research
-            _mock_split_response(),            # split
-            _mock_write_response("naver"),     # write naver
-            _mock_write_response("tistory"),   # write tistory
-            # edit naver (5 calls)
-            _mock_edit_response(),
-            _mock_edit_response(),
-            _mock_edit_response(),
-            _mock_edit_response(),
-            _mock_quality_response(),
-            # edit tistory (5 calls)
-            _mock_edit_response(),
-            _mock_edit_response(),
-            _mock_edit_response(),
-            _mock_edit_response(),
-            _mock_quality_response(),
-        ]
+        mock_claude_client.call.side_effect = _build_side_effects()
 
         pipe = Pipeline(mock_claude_client)
-        result = await pipe.run(
-            topic="테스트 주제",
-            keywords=["AI", "테스트"],
-        )
+        result = await pipe.run(topic="테스트 주제", keywords=["AI", "테스트"])
 
         assert isinstance(result, PipelineResult)
         assert result.topic.title == "테스트 주제"
         assert result.research.topic_id == result.topic.topic_id
 
     @pytest.mark.asyncio
-    async def test_pipeline_quality_passed(self, mock_claude_client):
-        """품질 통과 시 status=success"""
-        mock_claude_client.call.side_effect = [
-            _mock_research_response(),
-            _mock_split_response(),
-            _mock_write_response("naver"),
-            _mock_write_response("tistory"),
-            *[_mock_edit_response()] * 4,
-            _mock_quality_response(),
-            *[_mock_edit_response()] * 4,
-            _mock_quality_response(),
-        ]
+    async def test_pipeline_has_seo_results(self, mock_claude_client):
+        """SEO 결과가 포함되는지 확인"""
+        mock_claude_client.call.side_effect = _build_side_effects()
 
         pipe = Pipeline(mock_claude_client)
         result = await pipe.run(topic="테스트 주제")
 
+        assert result.naver_seo is not None
+        assert result.tistory_seo is not None
+        assert result.naver_seo.platform == "naver"
+        assert result.tistory_seo.platform == "tistory"
+        assert result.tistory_seo.meta_description is not None
+
+    @pytest.mark.asyncio
+    async def test_pipeline_has_format_output(self, mock_claude_client):
+        """포맷 변환 결과 (HTML/Markdown)가 있는지"""
+        mock_claude_client.call.side_effect = _build_side_effects()
+
+        pipe = Pipeline(mock_claude_client)
+        result = await pipe.run(topic="테스트 주제")
+
+        assert len(result.naver_html) > 0
+        assert "<h2>" in result.naver_html or "<p>" in result.naver_html
+        assert len(result.tistory_markdown) > 0
+
+    @pytest.mark.asyncio
+    async def test_pipeline_quality_check(self, mock_claude_client):
+        """품질 검사가 정상 동작하는지"""
+        mock_claude_client.call.side_effect = _build_side_effects()
+
+        pipe = Pipeline(mock_claude_client)
+        result = await pipe.run(topic="테스트 주제")
+
+        assert result.quality_report is not None
         assert result.quality_report.naver_passed is True
         assert result.quality_report.tistory_passed is True
 
     @pytest.mark.asyncio
     async def test_pipeline_has_both_platforms(self, mock_claude_client):
         """네이버/티스토리 양 플랫폼 결과가 있는지"""
-        mock_claude_client.call.side_effect = [
-            _mock_research_response(),
-            _mock_split_response(),
-            _mock_write_response("naver"),
-            _mock_write_response("tistory"),
-            *[_mock_edit_response()] * 4,
-            _mock_quality_response(),
-            *[_mock_edit_response()] * 4,
-            _mock_quality_response(),
-        ]
+        mock_claude_client.call.side_effect = _build_side_effects()
 
         pipe = Pipeline(mock_claude_client)
         result = await pipe.run(topic="테스트 주제")

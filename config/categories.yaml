@@ -1,0 +1,79 @@
+# ============================================================
+# AI 블로그 자동화 — 카테고리 체계
+# 네이버/티스토리 동일 체계, 톤만 다르게 적용
+# ============================================================
+
+categories:
+
+  ai_products:
+    name: "AI 제품/서비스"
+    description: "ChatGPT, Claude, Gemini 등 AI 서비스 소식과 리뷰"
+    naver_category_name: "AI 소식"
+    tistory_category_name: "AI 제품 분석"
+    sub_categories:
+      - id: "new_release"
+        name: "신제품/업데이트"
+        description: "새로운 AI 서비스 출시, 기존 서비스 업데이트"
+      - id: "review"
+        name: "사용 리뷰"
+        description: "AI 서비스 직접 사용 후기, 장단점 분석"
+      - id: "comparison"
+        name: "비교 분석"
+        description: "AI 서비스 간 비교 (ChatGPT vs Claude 등)"
+    keywords_pool:
+      - "ChatGPT"
+      - "Claude"
+      - "Gemini"
+      - "Copilot"
+      - "Midjourney"
+      - "DALL-E"
+      - "Sora"
+      - "Perplexity"
+
+  ai_technology:
+    name: "AI 기술/트렌드"
+    description: "AI 기술 원리, 업계 동향, 미래 전망"
+    naver_category_name: "AI 이야기"
+    tistory_category_name: "AI 기술 분석"
+    sub_categories:
+      - id: "explainer"
+        name: "기술 설명"
+        description: "RAG, 파인튜닝 등 AI 기술 원리를 쉽게/깊게 설명"
+      - id: "trend"
+        name: "트렌드 분석"
+        description: "AI 업계 동향, 투자, 규제, 미래 전망"
+      - id: "research"
+        name: "연구/논문"
+        description: "주요 AI 논문, 연구 결과 해설"
+    keywords_pool:
+      - "LLM"
+      - "생성AI"
+      - "AI 에이전트"
+      - "RAG"
+      - "멀티모달"
+      - "오픈소스 AI"
+      - "AI 규제"
+
+  ai_practical:
+    name: "AI 활용법"
+    description: "AI를 실생활/업무에 활용하는 방법"
+    naver_category_name: "AI 활용팁"
+    tistory_category_name: "AI 실무 가이드"
+    sub_categories:
+      - id: "tutorial"
+        name: "사용법/튜토리얼"
+        description: "AI 도구 사용법, 프롬프트 작성법"
+      - id: "workflow"
+        name: "업무 활용"
+        description: "AI를 업무에 적용하는 워크플로우"
+      - id: "creative"
+        name: "창작 활용"
+        description: "AI로 이미지, 영상, 음악 만들기"
+    keywords_pool:
+      - "AI 글쓰기"
+      - "AI 이미지"
+      - "AI 코딩"
+      - "AI 업무"
+      - "AI 자동화"
+      - "프롬프트"
+      - "AI 번역"
