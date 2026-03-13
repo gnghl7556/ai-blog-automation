@@ -66,9 +66,9 @@ def _get_notifier():
 
 
 async def job_collect() -> dict:
-    """RSS 수집 작업
+    """전체 소스 수집 작업
 
-    흐름: RSSCollector → Deduplicator → TopicTranslator → DB 저장
+    흐름: CollectorOrchestrator → Deduplicator → TopicTranslator → DB 저장
 
     Returns:
         {"collected": int, "unique": int, "saved": int}
@@ -86,12 +86,14 @@ async def job_collect() -> dict:
             client = _get_claude_client()
             db, repo = _get_db_and_repo()
 
-            from collectors.rss_collector import RSSCollector
+            from collectors.collector_orchestrator import (
+                CollectorOrchestrator,
+            )
             from collectors.deduplicator import Deduplicator
             from collectors.translator import TopicTranslator
 
-            collector = RSSCollector()
-            raw_items = await collector.collect_all()
+            orchestrator = CollectorOrchestrator()
+            raw_items = await orchestrator.collect_all()
 
             if not raw_items:
                 job_logger.info("job_collect.no_items")
@@ -218,6 +220,54 @@ async def job_curate() -> dict:
                 await notifier.send_message(
                     f"❌ 큐레이션 실패: {str(e)}"
                 )
+            return {"error": str(e)}
+
+
+async def job_collect_trends() -> dict:
+    """트렌드 수집 작업 (매일 1회)
+
+    Returns:
+        {"trends_collected": int}
+    """
+    lock = get_job_lock("collect_trends")
+    if lock.locked():
+        logger.warning("job_collect_trends.already_running")
+        return {"skipped": True}
+
+    async with lock:
+        job_logger = logger.bind(job="collect_trends")
+        job_logger.info("job_collect_trends.start")
+
+        try:
+            from collectors.collector_orchestrator import (
+                CollectorOrchestrator,
+            )
+
+            orchestrator = CollectorOrchestrator()
+            trends = await orchestrator.collect_trends()
+
+            result = {"trends_collected": len(trends)}
+            job_logger.info("job_collect_trends.done", **result)
+
+            notifier = _get_notifier()
+            if notifier and trends:
+                top_keywords = [
+                    f"{t.keyword}({t.score:.0f})"
+                    for t in sorted(
+                        trends, key=lambda x: x.score, reverse=True,
+                    )[:5]
+                ]
+                await notifier.send_message(
+                    f"📈 트렌드 수집: {len(trends)}개 키워드\n"
+                    f"Top: {', '.join(top_keywords)}"
+                )
+
+            return result
+
+        except Exception as e:
+            job_logger.error(
+                "job_collect_trends.failed", error=str(e),
+            )
             return {"error": str(e)}
 
 

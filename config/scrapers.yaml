@@ -1,0 +1,49 @@
+# ============================================================
+# 웹 스크래핑 대상 사이트 설정
+# 사이트 구조 변경 시 여기만 수정하면 됩니다.
+# ============================================================
+
+scrapers:
+  anthropic:
+    name: "Anthropic News"
+    url: "https://www.anthropic.com/news"
+    article_selector: "a[href*='/news/']"
+    title_selector: "h3"
+    link_attr: "href"
+    base_url: "https://www.anthropic.com"
+    language: "en"
+    source_type: "blog"
+    max_items: 20
+
+  deepmind:
+    name: "Google DeepMind Blog"
+    url: "https://deepmind.google/discover/blog/"
+    article_selector: "a[href*='/discover/blog/']"
+    title_selector: "h3"
+    link_attr: "href"
+    base_url: "https://deepmind.google"
+    language: "en"
+    source_type: "blog"
+    max_items: 20
+
+  meta_ai:
+    name: "Meta AI Blog"
+    url: "https://ai.meta.com/blog/"
+    article_selector: "a[href*='/blog/']"
+    title_selector: "h2, h3"
+    link_attr: "href"
+    base_url: "https://ai.meta.com"
+    language: "en"
+    source_type: "blog"
+    max_items: 20
+
+  product_hunt:
+    name: "Product Hunt - AI"
+    url: "https://www.producthunt.com/topics/artificial-intelligence"
+    article_selector: "[data-test='post-item']"
+    title_selector: "h3"
+    link_attr: "href"
+    base_url: "https://www.producthunt.com"
+    language: "en"
+    source_type: "community"
+    max_items: 10

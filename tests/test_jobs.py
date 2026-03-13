@@ -89,14 +89,14 @@ class TestJobCollect:
         with patch("scheduler.jobs._get_claude_client") as mock_client, \
              patch("scheduler.jobs._get_db_and_repo") as mock_db, \
              patch("scheduler.jobs._get_notifier", return_value=None), \
-             patch("collectors.rss_collector.RSSCollector") as mock_rss, \
+             patch("collectors.collector_orchestrator.CollectorOrchestrator") as mock_orch, \
              patch("collectors.deduplicator.Deduplicator") as mock_dedup, \
              patch("collectors.translator.TopicTranslator") as mock_trans:
 
-            # RSSCollector mock
-            collector_inst = MagicMock()
-            collector_inst.collect_all = AsyncMock(return_value=mock_items)
-            mock_rss.return_value = collector_inst
+            # CollectorOrchestrator mock
+            orch_inst = MagicMock()
+            orch_inst.collect_all = AsyncMock(return_value=mock_items)
+            mock_orch.return_value = orch_inst
 
             # Deduplicator mock
             dedup_inst = MagicMock()
@@ -127,11 +127,11 @@ class TestJobCollect:
         with patch("scheduler.jobs._get_claude_client"), \
              patch("scheduler.jobs._get_db_and_repo") as mock_db, \
              patch("scheduler.jobs._get_notifier", return_value=None), \
-             patch("collectors.rss_collector.RSSCollector") as mock_rss:
+             patch("collectors.collector_orchestrator.CollectorOrchestrator") as mock_orch:
 
-            collector_inst = MagicMock()
-            collector_inst.collect_all = AsyncMock(return_value=[])
-            mock_rss.return_value = collector_inst
+            orch_inst = MagicMock()
+            orch_inst.collect_all = AsyncMock(return_value=[])
+            mock_orch.return_value = orch_inst
             mock_db.return_value = (MagicMock(), MagicMock())
 
             result = await job_collect()
@@ -145,19 +145,19 @@ class TestJobCollect:
         with patch("scheduler.jobs._get_claude_client"), \
              patch("scheduler.jobs._get_db_and_repo") as mock_db, \
              patch("scheduler.jobs._get_notifier", return_value=None), \
-             patch("collectors.rss_collector.RSSCollector") as mock_rss:
+             patch("collectors.collector_orchestrator.CollectorOrchestrator") as mock_orch:
 
-            collector_inst = MagicMock()
-            collector_inst.collect_all = AsyncMock(
-                side_effect=Exception("RSS 에러")
+            orch_inst = MagicMock()
+            orch_inst.collect_all = AsyncMock(
+                side_effect=Exception("수집 에러")
             )
-            mock_rss.return_value = collector_inst
+            mock_orch.return_value = orch_inst
             mock_db.return_value = (MagicMock(), MagicMock())
 
             result = await job_collect()
 
             assert "error" in result
-            assert "RSS 에러" in result["error"]
+            assert "수집 에러" in result["error"]
 
 
 # ── job_curate 테스트 ──

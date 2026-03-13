@@ -4,7 +4,12 @@ scheduler:
 
 jobs:
   collect:
-    description: "RSS 주제 수집"
+    description: "전체 소스 수집 (RSS + HN + Reddit + Web)"
+    cron: "0 6 * * *"         # 매일 06:00 KST
+    enabled: true
+
+  collect_trends:
+    description: "검색 트렌드 수집 (Google Trends + Naver)"
     cron: "0 6 * * *"         # 매일 06:00 KST
     enabled: true
 

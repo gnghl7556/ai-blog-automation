@@ -169,6 +169,17 @@ class CurationResult(BaseModel):
     selected: bool = False
 
 
+# ── 트렌드 데이터 (Phase 7) ──
+
+class TrendData(BaseModel):
+    """트렌드 수집 결과"""
+    keyword: str
+    source: str                        # "google_trends" | "naver_datalab"
+    score: float                       # 0~100 상대 점수
+    category: str                      # data_sources.yaml의 카테고리
+    collected_at: datetime = Field(default_factory=datetime.now)
+
+
 # ── 발행 결과 ──
 
 class PublishResult(BaseModel):

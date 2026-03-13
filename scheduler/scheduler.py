@@ -12,6 +12,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 from scheduler.jobs import (
     job_collect,
+    job_collect_trends,
     job_curate,
     job_generate,
     job_cleanup,
@@ -23,6 +24,7 @@ logger = structlog.get_logger()
 # 작업 이름 → 함수 매핑
 JOB_FUNCTIONS = {
     "collect": job_collect,
+    "collect_trends": job_collect_trends,
     "curate": job_curate,
     "generate": job_generate,
     "cleanup": job_cleanup,
